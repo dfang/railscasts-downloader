@@ -1,9 +1,20 @@
 #!/usr/bin/ruby
 require 'rss'
 
-p 'Downloading rss index'
+if File.exist?("rss.index")
+  p 'Read rss index'
+  rss_string = ''
+  File.open('rss.index', 'r') do |file|
+    while line = file.gets
+      rss_string += line
+    end
+  end
+else
+  p 'Downloading rss index'
+  rss_string = open('http://feeds.feedburner.com/railscasts').read
+  File.open('rss.index', 'w') {|file| file.puts rss_string }
+end
 
-rss_string = open('http://feeds.feedburner.com/railscasts').read
 rss = RSS::Parser.parse(rss_string, false)
 videos_urls = rss.items.map { |it| it.enclosure.url }.reverse
 
