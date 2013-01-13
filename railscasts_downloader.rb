@@ -32,7 +32,7 @@ rss = RSS::Parser.parse(rss_string, false)
 videos_urls = rss.items.map { |it| {:folder =>foldername(it.title), :url =>it.enclosure.url}}.reverse
 
 videos_filenames = videos_urls.map {|k| k[:url].split('/').last }
-existing_filenames = Dir.glob('**/*.mp4')
+existing_filenames = Dir.glob("**{,/*/**}/*.mp4")
 missing_filenames = videos_filenames - existing_filenames
 p "Downloading #{missing_filenames.size} missing videos"
 
